@@ -21,7 +21,7 @@ export default {
       const body = await request.json();
       
       // Google Generative Language API හරහා Imagen 4 Ultra වෙත Request එක යැවීම
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4-ultra:predict?key=${env.GEMINI_API_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-ultra-generate-001:predict?key=${env.GEMINI_API_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
