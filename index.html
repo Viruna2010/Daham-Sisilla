@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daham Sisila - Premium AI Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Noto+Sans+Sinhala:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Premium Dark Theme --- */
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(26, 35, 58, 0.7);
+            --primary-green: #119929;
+            --primary-red: #e60000;
+            --text-light: #e2e8f0;
+            --glow-green: 0 0 20px rgba(17, 153, 41, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #1a2a42 0%, transparent 70%);
+            color: var(--text-light);
+            font-family: 'Poppins', 'Noto Sans Sinhala', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Header & Control Panel --- */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00f260, #0575e6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 10px 0;
+        }
+
+        .control-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, var(--primary-green), #0a6b1b);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--glow-green);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 30px rgba(17, 153, 41, 0.6);
+        }
+
+        .btn-generate:active { transform: translateY(1px); }
+
+        /* --- Premium Loading Animation --- */
+        .loader-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .premium-spinner {
+            width: 70px;
+            height: 70px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--primary-green);
+            border-right-color: #00f260;
+            border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+        
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .loading-status {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #00f260;
+            letter-spacing: 1px;
+            font-weight: 500;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* --- Slide Grid --- */
+        #slides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 50px;
+            width: 100%;
+            max-width: 1500px;
+            justify-items: center;
+        }
+
+        /* --- Slide Item --- */
+        .slide-wrapper {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        .slide-wrapper:hover { transform: translateY(-10px); }
+
+        /* --- The 9:16 Shorts Canvas --- */
+        .slide {
+            width: 400px;
+            height: 711px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .top-green {
+            background-color: var(--primary-green);
+            color: white;
+            text-align: center;
+            padding: 20px 15px;
+            font-size: 22px;
+            font-weight: 700;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+        }
+
+        .middle-image {
+            flex-grow: 1;
+            background-color: #111;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+        }
+
+        .bottom-red {
+            background-color: var(--primary-red);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .bottom-black {
+            background-color: #000000;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        /* --- YouTube Info Tag --- */
+        .yt-info {
+            width: 400px;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-sizing: border-box;
+        }
+        
+        .yt-title { color: #ff4d4d; font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+        .yt-tags { color: #88ff88; font-size: 14px; line-height: 1.6; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Daham Sisila Premium</h1>
+        <p>Fully Automated Vintage Ceylon Shorts Generator</p>
+    </div>
+
+    <div class="control-panel">
+        <p style="margin-bottom: 25px; color: #a0aec0; font-size: 16px;">
+            එක Click එකකින් <b>Gemini Flash Lite</b> සහ <b>Imagen 4 Ultra</b> මාදිලි හරහා 100% ස්වයංක්‍රීයව වීඩියෝ 10ක් සැකසේ.
+        </p>
+        <button class="btn-generate" onclick="startGeneration()">⚡ Generate 10 Slides</button>
+    </div>
+
+    <!-- Loading Animation -->
+    <div class="loader-container" id="loader">
+        <div class="premium-spinner"></div>
+        <div class="loading-status" id="loading-text">Gemini AI දත්ත සකසමින් පවතී...</div>
+    </div>
+
+    <!-- Generated Slides Go Here -->
+    <div id="slides-grid"></div>
+
+    <script>
+        async function startGeneration() {
+            const grid = document.getElementById('slides-grid');
+            const loader = document.getElementById('loader');
+            const statusText = document.getElementById('loading-text');
+            
+            grid.innerHTML = "";
+            loader.style.display = "flex";
+
+            try {
+                // 1. Text Data එක Worker එක හරහා ලබා ගැනීම (Secret API key එක Worker එකේ ඇත)
+                statusText.innerText = "🧠 Gemini AI: මාතෘකා 10ක් සිතමින් පවතී...";
+                const resContent = await fetch('/api/generate-content', { method: 'POST' });
+                const dataRaw = await resContent.json();
+                
+                let jsonString = dataRaw.candidates[0].content.parts[0].text;
+                jsonString = jsonString.replace(/```json/g, '').replace(/```/g, '').trim();
+                const slideDataList = JSON.parse(jsonString);
+
+                // 2. පින්තූර 10 පෝලිමට Generate කිරීම (Imagen 4 Ultra)
+                for (let i = 0; i < slideDataList.length; i++) {
+                    let slideData = slideDataList[i];
+                    statusText.innerText = `🎨 Imagen 4 Ultra: ${i + 1}/10 රූපය නිර්මාණය වේ...`;
+                    
+                    const resImage = await fetch('/api/generate-image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: slideData.image_prompt })
+                    });
+                    
+                    const imgData = await resImage.json();
+                    
+                    let base64Image = "";
+                    if(imgData.predictions && imgData.predictions[0].bytesBase64Encoded) {
+                        base64Image = `data:image/jpeg;base64,${imgData.predictions[0].bytesBase64Encoded}`;
+                    } else {
+                        // In case image generation fails, put a fallback
+                        base64Image = `https://picsum.photos/seed/${Math.random()}/400/500?grayscale`;
+                    }
+
+                    // Display the finished slide
+                    renderSlide(slideData, base64Image, i * 0.2); // Added delay for animation
+                }
+
+                statusText.innerText = "✨ සාර්ථකයි! පින්තූර 10ම නිර්මාණය කර අවසන්.";
+                setTimeout(() => { loader.style.display = "none"; }, 3000);
+
+            } catch (error) {
+                console.error(error);
+                statusText.innerText = "⚠️ දෝෂයක් මතු විය! නැවත උත්සහ කරන්න.";
+                statusText.style.color = "var(--primary-red)";
+            }
+        }
+
+        // Render Function
+        function renderSlide(data, imageUrl, delay) {
+            const grid = document.getElementById('slides-grid');
+            
+            const slideHTML = `
+                <div class="slide-wrapper" style="animation-delay: ${delay}s">
+                    <div class="slide">
+                        <div class="top-green">${data.title}</div>
+                        <div class="middle-image" style="background-image: url('${imageUrl}');">
+                            <div class="watermark">දහම් සිසිල</div>
+                        </div>
+                        <div class="bottom-red">ලක්ෂ ගණනක් බැලුවට subscribe කරන්නේ සීමිත පිරිසයි.</div>
+                        <div class="bottom-black">${data.share_text}</div>
+                    </div>
+                    
+                    <div class="yt-info">
+                        <div class="yt-title">🎬 ${data.video_title}</div>
+                        <div class="yt-tags">🏷️ ${data.tags}</div>
+                    </div>
+                </div>
+            `;
+            
+            grid.insertAdjacentHTML('beforeend', slideHTML);
+        }
+    </script>
+</body>
+</html>
